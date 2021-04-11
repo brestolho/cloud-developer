@@ -33,7 +33,8 @@ import { filterImageFromURL, deleteLocalFiles, getFileNameFromPath } from "./uti
     res.send("try GET /filteredimage?image_url={{}}");
   });
 
-  // Creaye endpoint filteredimage, cache image file from a query source
+  // @TODO1
+  // Create endpoint filteredimage, cache image file from a query source
   app.get("/filteredimage", async (req, res) => {
     const { image_url }: { image_url: string } = req.query;
     // validate if query param is not empty
@@ -41,11 +42,15 @@ import { filterImageFromURL, deleteLocalFiles, getFileNameFromPath } from "./uti
       return res.status(400).send({ message: "Image url is required!" });
     }
 
-    // filter image and store it locally
-    let imagePath: string = await filterImageFromURL(image_url);
+    try {
+      // filter image and store it locally
+      let imagePath: string = await filterImageFromURL(image_url);
 
-    // response stored image to user as a proxy
-    res.status(200).header("udacity-filename", getFileNameFromPath(imagePath)).sendFile(imagePath);
+      // response stored image to user as a proxy
+      res.status(200).header("udacity-filename", getFileNameFromPath(imagePath)).sendFile(imagePath);
+    } catch (message) {
+      return res.status(500).send({ message });
+    }
   });
 
   // Start the Server
