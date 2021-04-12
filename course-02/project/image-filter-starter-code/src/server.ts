@@ -1,19 +1,19 @@
-import express from "express";
+import express, { Request, Response, Express } from "express";
 import bodyParser from "body-parser";
 import { filterImageFromURL, deleteLocalFiles, getFileNameFromPath } from "./util/util";
 
 (async () => {
   // Init the Express application
-  const app = express();
+  const app: Express = express();
 
   // Set the network port
-  const port = process.env.PORT || 8082;
+  const port: number = +process.env.PORT || 8082;
 
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
   // Creaye middleware for deleting files cached after success response
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next) => {
     res.on("finish", () => {
       // get headers
       const headers: any = res.getHeaders();
@@ -29,13 +29,13 @@ import { filterImageFromURL, deleteLocalFiles, getFileNameFromPath } from "./uti
 
   // Root Endpoint
   // Displays a simple message to the user
-  app.get("/", async (req, res) => {
+  app.get("/", async (req: Request, res: Response) => {
     res.send("try GET /filteredimage?image_url={{}}");
   });
 
   // @TODO1
   // Create endpoint filteredimage, cache image file from a query source
-  app.get("/filteredimage", async (req, res) => {
+  app.get("/filteredimage", async (req: Request, res: Response) => {
     const { image_url }: { image_url: string } = req.query;
     // validate if query param is not empty
     if (!image_url) {
